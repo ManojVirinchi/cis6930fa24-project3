@@ -13,7 +13,7 @@ def test_fetch_pdf_from_url_local_file(tmp_path):
 
 @patch("src.req.requests.get")
 def test_fetch_pdf_from_url_link(mock_get):
-    # Mocking a PDF response from the URL
+    
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.content = b"Sample PDF from URL"
