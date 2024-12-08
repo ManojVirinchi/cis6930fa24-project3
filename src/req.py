@@ -16,14 +16,12 @@ def fetch_pdf_from_url(input_data):
     if isinstance(input_data, str):
         parsed_url = urlparse(input_data)
         if parsed_url.scheme:
-            
             response = requests.get(input_data)
             if response.status_code == 200:
                 return BytesIO(response.content)
             else:
-                raise Exception(f"Failed to download PDF. Status code: {response.status_code}")
+                raise Exception(f"Failed to download PDF from {input_data}. Status code: {response.status_code}")
         else:
-            
             file_path = Path(input_data)
             if file_path.exists() and file_path.is_file():
                 with open(file_path, 'rb') as file:
@@ -31,7 +29,6 @@ def fetch_pdf_from_url(input_data):
             else:
                 raise FileNotFoundError(f"File not found: {input_data}")
     else:
-       
         return input_data
 
 def extract_incident_data(pdf_file):

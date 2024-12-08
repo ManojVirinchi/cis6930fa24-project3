@@ -15,9 +15,11 @@ import datetime
 def process_input(url_input, file_input):
     url_timestamp = None
     file_timestamp = None
+    all_incident_data = []
     
     if url_input:
         url_timestamp = datetime.datetime.now()
+        urls = [url.strip() for url in url_input.split(',')]
     
     if file_input is not None and file_input.name != "":
         file_timestamp = file_input.timestamp if hasattr(file_input, 'timestamp') else datetime.datetime.now()
@@ -29,21 +31,30 @@ def process_input(url_input, file_input):
                     pdf_file = BytesIO(f.read())
             else:
                 pdf_file = BytesIO(file_input.read())
+            incident_data = extract_incident_data(pdf_file)
+            all_incident_data.extend(incident_data)
         else:
-            pdf_file = fetch_pdf_from_url(url_input)
+            for url in urls:
+                pdf_file = fetch_pdf_from_url(url)
+                incident_data = extract_incident_data(pdf_file)
+                all_incident_data.extend(incident_data)
     elif file_timestamp:
         if isinstance(file_input, str):
             with open(file_input, 'rb') as f:
                 pdf_file = BytesIO(f.read())
         else:
             pdf_file = BytesIO(file_input.read())
+        incident_data = extract_incident_data(pdf_file)
+        all_incident_data.extend(incident_data)
     elif url_timestamp:
-        pdf_file = fetch_pdf_from_url(url_input)
+        for url in urls:
+            pdf_file = fetch_pdf_from_url(url)
+            incident_data = extract_incident_data(pdf_file)
+            all_incident_data.extend(incident_data)
     else:
         raise ValueError("No input provided")
     
-    incident_data = extract_incident_data(pdf_file)
-    df = pd.DataFrame(incident_data)
+    df = pd.DataFrame(all_incident_data)
     
     cluster_fig = create_cluster_plot(df)
     bar_fig = create_bar_plot(df)
