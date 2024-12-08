@@ -70,7 +70,7 @@ The **NormanPD Incident Data Visualizer** is a Python application that processes
 ## Functions
 
 ### `process_input(url_input, file_input)`
-  - **Description**: Processes the input PDF (from URL or file upload), extracts incident data, and generates visualizations.
+  - **Description**: Processes the input PDF (from URL or file upload), extracts incident data, and generates visualizations. This also uses time stamp of the input i.e timestamp of the URL and the timestamp of the uploaded file and process the pdf that was recently uploaded . 
   - **Outputs**: Multiple plots for visualizing incident data.
 
 ### `create_cluster_plot(df)`
@@ -130,4 +130,4 @@ pipenv run pytest -v
 
 ## Video Demonstration
 
-[Project Demo](https://youtu.be/VY0aQRCT_2w)
+[Project Demo](https://youtu.be/sbW--smuJQs)

@@ -6,18 +6,39 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import seaborn as sns
 from io import BytesIO
+import datetime
 
 sns.set_theme()
 
+import datetime
+
 def process_input(url_input, file_input):
+    url_timestamp = None
+    file_timestamp = None
+    
     if url_input:
-        pdf_file = fetch_pdf_from_url(url_input)
-    elif file_input is not None:
+        url_timestamp = datetime.datetime.now()
+    
+    if file_input is not None and file_input.name != "":
+        file_timestamp = file_input.timestamp if hasattr(file_input, 'timestamp') else datetime.datetime.now()
+    
+    if url_timestamp and file_timestamp:
+        if file_timestamp > url_timestamp:
+            if isinstance(file_input, str):
+                with open(file_input, 'rb') as f:
+                    pdf_file = BytesIO(f.read())
+            else:
+                pdf_file = BytesIO(file_input.read())
+        else:
+            pdf_file = fetch_pdf_from_url(url_input)
+    elif file_timestamp:
         if isinstance(file_input, str):
             with open(file_input, 'rb') as f:
                 pdf_file = BytesIO(f.read())
         else:
             pdf_file = BytesIO(file_input.read())
+    elif url_timestamp:
+        pdf_file = fetch_pdf_from_url(url_input)
     else:
         raise ValueError("No input provided")
     
@@ -70,17 +91,16 @@ def create_cluster_plot(df):
     ax.set_xlabel('Nature of Incident', labelpad=15, fontsize=16, color='white')
     ax.set_ylabel('Incident ORI', labelpad=15, fontsize=16, color='white')
     
-    # Add horizontal gridlines
+   
     ax.yaxis.grid(True, color='gray', linestyle='--', alpha=0.5)
     
-    # Remove vertical gridlines
+    
     ax.xaxis.grid(False)
     
-    # Remove spines
     for spine in ax.spines.values():
         spine.set_visible(False)
     
-    # Customize legend
+
     legend = ax.get_legend()
     if legend:
         legend.set_frame_on(False)
