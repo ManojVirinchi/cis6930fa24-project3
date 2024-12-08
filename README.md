@@ -123,10 +123,14 @@ pipenv run pytest -v
 - **Assumptions**:
   - The input PDF follows a consistent format.
   - The extraction logic assumes the location and nature data are correctly formatted.
+  - The KMeans clustering algorithm is suitable for the type of incident data being processed.
   
 - **Bugs**:
   - Changes to the PDF structure may require adjustments to the extraction logic.
   - Network errors during PDF download are not currently handled.
+  - If neither url_input nor file_input is provided, a ValueError is raised, but the error handling is not integrated with the Gradio interface, potentially confusing users.
+  - While the file uploader restricts inputs to .pdf, no explicit validation in process_input ensures the uploaded file is a valid PDF.
+  
 
 ## Video Demonstration
 
